@@ -1,0 +1,4 @@
+springBoot {
+    // Without this configuration, bootRun fails randomly with 'Main class name has not been configured' message
+    mainClass = 'eu.malycha.rabbitmq.demo.audit.AuditApplication'
+}
