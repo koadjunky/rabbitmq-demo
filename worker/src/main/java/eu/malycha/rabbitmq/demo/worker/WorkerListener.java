@@ -28,7 +28,7 @@ public class WorkerListener {
         this.template = template;
     }
 
-    @RabbitListener(queues = DemoConfiguration.workInboundQueueName)
+    @RabbitListener(queues = DemoConfiguration.WORK_INBOUND)
     public void process(String task,
                         Channel channel,
                         @Header(AmqpHeaders.DELIVERY_TAG) long tag,
@@ -36,7 +36,7 @@ public class WorkerListener {
             throws InterruptedException, IOException {
         if (expiration > System.currentTimeMillis() + processingTime) {
             Thread.sleep(processingTime);
-            template.convertAndSend("", DemoConfiguration.workOutboundQueueName, task + "-processed");
+            template.convertAndSend("", DemoConfiguration.WORK_OUTBOUND, task + "-processed");
             channel.basicAck(tag, false);
             LOGGER.info("Task processed.");
         } else {

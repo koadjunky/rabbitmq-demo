@@ -1,7 +1,9 @@
 package eu.malycha.rabbitmq.demo.common;
 
 import org.springframework.amqp.core.AcknowledgeMode;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -15,9 +17,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DemoConfiguration implements RabbitListenerConfigurer {
 
-    public static final String workInboundQueueName = "work-inbound";
-    public static final String workOutboundQueueName = "work-outbound";
-    public static final String certifiedResultQueueName = "certified-result";
+    public static final String WORK_INBOUND = "work-inbound";
+    public static final String WORK_OUTBOUND = "work-outbound";
+    public static final String CERTIFIED_RESULT = "certified-result";
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -41,17 +43,17 @@ public class DemoConfiguration implements RabbitListenerConfigurer {
 
     @Bean
     public Queue inboundQueue() {
-        return new Queue(workInboundQueueName);
+        return new Queue(WORK_INBOUND);
     }
 
     @Bean
     public Queue outboundQueue() {
-        return new Queue(workOutboundQueueName);
+        return new Queue(WORK_OUTBOUND);
     }
 
     @Bean
     public Queue certifiedResultQueue() {
-        return new Queue(certifiedResultQueueName);
+        return new Queue(CERTIFIED_RESULT);
     }
 
     @Override

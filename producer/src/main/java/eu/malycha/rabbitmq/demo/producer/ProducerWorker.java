@@ -31,7 +31,7 @@ public class ProducerWorker {
     public void produce() {
         if (enabled) {
             UUID uuid = UUID.randomUUID();
-            amqpTemplate.convertAndSend("", DemoConfiguration.workInboundQueueName, uuid.toString(), new MessagePostProcessor() {
+            amqpTemplate.convertAndSend("", DemoConfiguration.WORK_INBOUND, uuid.toString(), new MessagePostProcessor() {
                 @Override
                 public Message postProcessMessage(Message message) throws AmqpException {
                     MessageProperties properties = message.getMessageProperties();

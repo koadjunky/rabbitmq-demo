@@ -6,7 +6,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -17,7 +16,7 @@ public class ProducerConfiguration {
                                                                AmqpTemplate template) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(DemoConfiguration.workOutboundQueueName);
+        container.setQueueNames(DemoConfiguration.WORK_OUTBOUND);
         container.setMessageListener(new MessageListenerAdapter(new CertifierHandler(template)));
         return container;
     }
