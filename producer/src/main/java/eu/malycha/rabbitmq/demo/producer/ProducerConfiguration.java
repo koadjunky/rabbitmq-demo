@@ -12,24 +12,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ProducerConfiguration {
 
-    final String workInboundQueueName = "work-inbound";
-    final String workOutboundQueueName = "work-outbound";
-    final String certifiedResultQueueName = "certified-result";
+    public static final String workInboundQueueName = "work-inbound";
+    public static final String workOutboundQueueName = "work-outbound";
+    public static final String certifiedResultQueueName = "certified-result";
 
     @Bean
-    public RabbitTemplate workInboundTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setRoutingKey(workInboundQueueName);
-        template.setDefaultReceiveQueue(workInboundQueueName);
-        return template;
-    }
-
-    @Bean
-    public RabbitTemplate certifiedResultTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setRoutingKey(certifiedResultQueueName);
-        template.setDefaultReceiveQueue(certifiedResultQueueName);
-        return template;
+    public RabbitTemplate template(ConnectionFactory connectionFactory) {
+        return new RabbitTemplate(connectionFactory);
     }
 
     @Bean
@@ -42,17 +31,17 @@ public class ProducerConfiguration {
     }
 
     @Bean
-    public Queue workInboundQueue() {
+    public Queue inboundQueue() {
         return new Queue(workInboundQueueName);
     }
 
     @Bean
-    public Queue workOutboundQueue() {
+    public Queue outboundQueue() {
         return new Queue(workOutboundQueueName);
     }
 
     @Bean
-    public Queue certifiedResultQueueName() {
+    public Queue certifiedResultQueue() {
         return new Queue(certifiedResultQueueName);
     }
 }

@@ -3,6 +3,7 @@ package eu.malycha.rabbitmq.demo.worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,20 +14,21 @@ public class WorkerWorker {
 
     private final AmqpTemplate workInboundTemplate;
     private final AmqpTemplate workOutboundTemplate;
-    //TODO: Make configurable
-    private final int processingTime = 1000;
+
+    @Value("${worker.processing-time}")
+    private int processingTime;
 
     public WorkerWorker(AmqpTemplate workInboundTemplate, AmqpTemplate workOutboundTemplate) {
         this.workInboundTemplate = workInboundTemplate;
         this.workOutboundTemplate = workOutboundTemplate;
     }
 
-    @Scheduled(fixedDelay = 100)
-    public void process() {
-        String message = (String) workInboundTemplate.receiveAndConvert();
+    @Scheduled(fixedRate = 100)
+    public void process() throws InterruptedException {
+        String message = (String) workInboundTemplate.receiveAndConvert(WorkerConfiguration.workInboundQueueName);
         if (message != null) {
             Thread.sleep(processingTime);
-            workOutboundTemplate.convertAndSend(message + "-processed");
+            workOutboundTemplate.convertAndSend(WorkerConfiguration.workOutboundQueueName, message + "-processed");
             LOGGER.info("Message processed");
         }
     }

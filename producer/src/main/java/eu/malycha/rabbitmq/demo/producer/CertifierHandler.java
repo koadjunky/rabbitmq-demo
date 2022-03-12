@@ -16,7 +16,7 @@ public class CertifierHandler {
     }
 
     public void handleMessage(String text) {
-        amqpTemplate.convertAndSend(text + "-certified");
+        amqpTemplate.convertAndSend(ProducerConfiguration.certifiedResultQueueName, text + "-certified");
         LOGGER.info("Certified message");
     }
 }

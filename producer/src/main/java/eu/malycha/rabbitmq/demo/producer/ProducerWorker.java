@@ -25,7 +25,7 @@ public class ProducerWorker {
     public void produce() {
         if (enabled) {
             UUID uuid = UUID.randomUUID();
-            amqpTemplate.convertAndSend(uuid.toString());
+            amqpTemplate.convertAndSend(ProducerConfiguration.workInboundQueueName, uuid.toString());
             LOGGER.info("Produced message");
         } else {
             LOGGER.info("Producer not enabled");
