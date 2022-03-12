@@ -1,5 +1,6 @@
 package eu.malycha.rabbitmq.demo.producer;
 
+import eu.malycha.rabbitmq.demo.common.DemoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -16,7 +17,7 @@ public class CertifierHandler {
     }
 
     public void handleMessage(String text) {
-        amqpTemplate.convertAndSend(ProducerConfiguration.certifiedResultQueueName, text + "-certified");
-        LOGGER.info("Certified message");
+        amqpTemplate.convertAndSend(DemoConfiguration.certifiedResultQueueName, text + "-certified");
+        LOGGER.info("Task certified");
     }
 }
