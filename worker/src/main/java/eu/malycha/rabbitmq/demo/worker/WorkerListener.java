@@ -24,6 +24,11 @@ public class WorkerListener {
     @Value("${worker.processing-time}")
     private int processingTime;
 
+    @Value("${worker.fail}")
+    private boolean failTasks;
+
+    private int counter;
+
     public WorkerListener(AmqpTemplate template) {
         this.template = template;
     }
@@ -33,17 +38,40 @@ public class WorkerListener {
                         Channel channel,
                         @Header(AmqpHeaders.DELIVERY_TAG) long tag,
                         @Header("x-expiration-time") Long expiration)
-            throws InterruptedException, IOException {
+            throws Exception {
         if (expiration > System.currentTimeMillis() + processingTime) {
-            Thread.sleep(processingTime);
-            String processed = task + "-processed";
-            template.convertAndSend("", DemoConfiguration.WORK_OUTBOUND, processed);
-            channel.basicAck(tag, false);
-            LOGGER.info("Task processed: {}", processed);
+            processFresh(task, channel, tag);
         } else {
-            channel.basicReject(tag, false);
-            LOGGER.info("Task rejected: {}", task);
+            processStale(task, channel, tag);
         }
     }
 
+    private void processFresh(String task, Channel channel, long tag) throws Exception {
+        try {
+            attemptFail();
+            Thread.sleep(processingTime);
+            String processed = task + "-processed";
+            template.convertAndSend("", DemoConfiguration.WORK_OUTBOUND, processed);
+            LOGGER.info("Task processed: {}", processed);
+            channel.basicAck(tag, false);
+        } catch (Exception ex) {
+            // Requeue task for another processing attempt
+            channel.basicReject(tag, true);
+            LOGGER.warn("Task processing failed: {}", task);
+        }
+    }
+
+    private void processStale(String task, Channel channel, long tag) throws IOException {
+        // Send task to dead letter exchange
+        channel.basicReject(tag, false);
+        LOGGER.info("Task rejected: {}", task);
+    }
+
+    private void attemptFail() throws Exception {
+        // Fail every second attempt
+        counter = (counter + 1) % 2;
+        if (failTasks && counter == 1) {
+            throw new Exception("Processing failure.");
+        }
+    }
 }

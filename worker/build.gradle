@@ -3,6 +3,10 @@ springBoot {
     mainClass = 'eu.malycha.rabbitmq.demo.worker.WorkerApplication'
 }
 
+bootJar {
+    enabled = true
+}
+
 dependencies {
     implementation(project(":common").sourceSets.main.output)
 }

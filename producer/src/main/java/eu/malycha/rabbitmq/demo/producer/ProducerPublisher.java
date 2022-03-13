@@ -1,6 +1,7 @@
 package eu.malycha.rabbitmq.demo.producer;
 
 import eu.malycha.rabbitmq.demo.common.DemoConfiguration;
+import eu.malycha.rabbitmq.demo.producer.factory.TaskFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
@@ -20,18 +21,22 @@ public class ProducerPublisher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProducerPublisher.class);
 
     private final AmqpTemplate amqpTemplate;
-    private boolean enabled = true;
+
+    private final TaskFactory taskFactory;
+
+    private boolean enabled = false;
+
     private final long ttl = 10000;
 
-    public ProducerPublisher(AmqpTemplate amqpTemplate) {
+    public ProducerPublisher(AmqpTemplate amqpTemplate, TaskFactory taskFactory) {
         this.amqpTemplate = amqpTemplate;
+        this.taskFactory = taskFactory;
     }
 
     @Scheduled(fixedRateString = "${producer.rate}")
     public void produce() {
         if (enabled) {
-            UUID uuid = UUID.randomUUID();
-            String task = uuid.toString();
+            String task = taskFactory.produce();
             amqpTemplate.convertAndSend("", DemoConfiguration.WORK_INBOUND, task, new MessagePostProcessor() {
                 @Override
                 public Message postProcessMessage(Message message) throws AmqpException {

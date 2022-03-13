@@ -7,9 +7,11 @@ import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
-public class FirehoseConfiguration {
+@Profile("!tricolor")
+public class SimpleFirehoseConfiguration {
 
     public static final String FIREHOSE_EXCHANGE = "amq.rabbitmq.trace";
     public static final String FIREHOSE_QUEUE = "firehose-queue";

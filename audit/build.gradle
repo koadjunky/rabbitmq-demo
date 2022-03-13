@@ -3,6 +3,10 @@ springBoot {
     mainClass = 'eu.malycha.rabbitmq.demo.audit.AuditApplication'
 }
 
+bootJar {
+    enabled = true
+}
+
 dependencies {
     implementation(project(":common").sourceSets.main.output)
 }

@@ -56,8 +56,8 @@ public class DemoConfiguration implements RabbitListenerConfigurer {
 
     private static Queue buildQueue(String name) {
         return QueueBuilder.nonDurable(name)
-                .deadLetterExchange(DeadLetterConfiguration.TASK_DLX)
-                .deadLetterRoutingKey(DeadLetterConfiguration.TASK_DLQ)
+                .deadLetterExchange(SimpleDeadLetterConfiguration.TASK_DLX)
+                .deadLetterRoutingKey(SimpleDeadLetterConfiguration.TASK_DLQ)
                 .build();
     }
 
