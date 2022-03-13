@@ -2,3 +2,12 @@ springBoot {
     // Without this configuration, bootRun fails randomly with 'Main class name has not been configured' message
     mainClass = 'eu.malycha.rabbitmq.demo.audit.AuditApplication'
 }
+
+dependencies {
+    implementation(project(":common").sourceSets.main.output)
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
+}

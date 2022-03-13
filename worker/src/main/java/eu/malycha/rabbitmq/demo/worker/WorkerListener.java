@@ -36,12 +36,13 @@ public class WorkerListener {
             throws InterruptedException, IOException {
         if (expiration > System.currentTimeMillis() + processingTime) {
             Thread.sleep(processingTime);
-            template.convertAndSend("", DemoConfiguration.WORK_OUTBOUND, task + "-processed");
+            String processed = task + "-processed";
+            template.convertAndSend("", DemoConfiguration.WORK_OUTBOUND, processed);
             channel.basicAck(tag, false);
-            LOGGER.info("Task processed.");
+            LOGGER.info("Task processed: {}", processed);
         } else {
             channel.basicReject(tag, false);
-            LOGGER.info("Task rejected.");
+            LOGGER.info("Task rejected: {}", task);
         }
     }
 

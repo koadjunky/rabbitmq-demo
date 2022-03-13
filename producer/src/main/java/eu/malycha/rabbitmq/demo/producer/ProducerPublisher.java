@@ -15,15 +15,15 @@ import java.util.UUID;
 
 
 @Component
-public class ProducerWorker {
+public class ProducerPublisher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProducerWorker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProducerPublisher.class);
 
     private final AmqpTemplate amqpTemplate;
     private boolean enabled = true;
     private final long ttl = 10000;
 
-    public ProducerWorker(AmqpTemplate amqpTemplate) {
+    public ProducerPublisher(AmqpTemplate amqpTemplate) {
         this.amqpTemplate = amqpTemplate;
     }
 
@@ -31,7 +31,8 @@ public class ProducerWorker {
     public void produce() {
         if (enabled) {
             UUID uuid = UUID.randomUUID();
-            amqpTemplate.convertAndSend("", DemoConfiguration.WORK_INBOUND, uuid.toString(), new MessagePostProcessor() {
+            String task = uuid.toString();
+            amqpTemplate.convertAndSend("", DemoConfiguration.WORK_INBOUND, task, new MessagePostProcessor() {
                 @Override
                 public Message postProcessMessage(Message message) throws AmqpException {
                     MessageProperties properties = message.getMessageProperties();
@@ -40,9 +41,7 @@ public class ProducerWorker {
                     return message;
                 }
             });
-            LOGGER.info("Task produced");
-        } else {
-            LOGGER.info("Producer not enabled");
+            LOGGER.info("Task produced: {}", task);
         }
     }
 

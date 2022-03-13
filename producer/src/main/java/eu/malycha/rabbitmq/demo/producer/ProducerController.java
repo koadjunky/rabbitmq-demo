@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProducerController {
 
-    private final ProducerWorker producerWorker;
+    private final ProducerPublisher producerPublisher;
 
-    public ProducerController(ProducerWorker producerWorker) {
-        this.producerWorker = producerWorker;
+    public ProducerController(ProducerPublisher producerPublisher) {
+        this.producerPublisher = producerPublisher;
     }
 
     @GetMapping("/api/enabled")
     public String isEnabled() {
-        return producerWorker.isEnabled() ? "enabled" : "disabled";
+        return producerPublisher.isEnabled() ? "enabled" : "disabled";
     }
 
     @PutMapping("/api/enabled")
     public void setEnabled(@RequestParam Integer enabled) {
-        producerWorker.setEnabled(0 != enabled);
+        producerPublisher.setEnabled(0 != enabled);
     }
 
 }

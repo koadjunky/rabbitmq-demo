@@ -1,9 +1,8 @@
 package eu.malycha.rabbitmq.demo.common;
 
 import org.springframework.amqp.core.AcknowledgeMode;
-import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -22,42 +21,48 @@ public class DemoConfiguration implements RabbitListenerConfigurer {
     public static final String CERTIFIED_RESULT = "certified-result";
 
     @Bean
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        return connectionFactory;
+    public ConnectionFactory taskConnectionFactory() {
+        return new CachingConnectionFactory();
     }
 
     @Bean
-    public SimpleRabbitListenerContainerFactory containerFactory() {
+    public SimpleRabbitListenerContainerFactory taskContainerFactory() {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory());
+        factory.setConnectionFactory(taskConnectionFactory());
+        factory.setPrefetchCount(1);
         factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         return factory;
     }
 
     @Bean
-    public RabbitTemplate template() {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
-        return rabbitTemplate;
+    public RabbitTemplate taskTemplate() {
+        return new RabbitTemplate(taskConnectionFactory());
     }
 
     @Bean
     public Queue inboundQueue() {
-        return new Queue(WORK_INBOUND);
+        return buildQueue(WORK_INBOUND);
     }
 
     @Bean
     public Queue outboundQueue() {
-        return new Queue(WORK_OUTBOUND);
+        return buildQueue(WORK_OUTBOUND);
     }
 
     @Bean
     public Queue certifiedResultQueue() {
-        return new Queue(CERTIFIED_RESULT);
+        return buildQueue(CERTIFIED_RESULT);
+    }
+
+    private static Queue buildQueue(String name) {
+        return QueueBuilder.nonDurable(name)
+                .deadLetterExchange(DeadLetterConfiguration.TASK_DLX)
+                .deadLetterRoutingKey(DeadLetterConfiguration.TASK_DLQ)
+                .build();
     }
 
     @Override
     public void configureRabbitListeners(RabbitListenerEndpointRegistrar registrar) {
-        registrar.setContainerFactory(containerFactory());
+        registrar.setContainerFactory(taskContainerFactory());
     }
 }
