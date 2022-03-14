@@ -46,7 +46,7 @@ public class WorkerListener {
         }
     }
 
-    private void processFresh(String task, Channel channel, long tag) throws Exception {
+    private void processFresh(String task, Channel channel, long tag) throws InterruptedException, IOException {
         try {
             attemptFail();
             Thread.sleep(processingTime);
@@ -54,21 +54,26 @@ public class WorkerListener {
             template.convertAndSend("", DemoConfiguration.WORK_OUTBOUND, processed);
             LOGGER.info("Task processed: {}", processed);
             channel.basicAck(tag, false);
-        } catch (Exception ex) {
+        } catch (InterruptedException ex) {
             // Requeue task for another processing attempt
             channel.basicReject(tag, true);
+            LOGGER.warn("Task processing interrupted: {}", task);
+            throw ex;
+        } catch (Exception ex) {
+            // Requeue task for another processing attempt
             LOGGER.warn("Task processing failed: {}", task);
+            channel.basicReject(tag, true);
         }
     }
 
     private void processStale(String task, Channel channel, long tag) throws IOException {
         // Send task to dead letter exchange
-        channel.basicReject(tag, false);
         LOGGER.info("Task rejected: {}", task);
+        channel.basicReject(tag, false);
     }
 
     private void attemptFail() throws Exception {
-        // Fail every second attempt
+        // Fail every second attempt if failTasks is true
         counter = (counter + 1) % 2;
         if (failTasks && counter == 0) {
             throw new Exception("Processing failure.");

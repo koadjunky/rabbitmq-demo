@@ -26,9 +26,14 @@ public class ProducerListener {
 
     @RabbitListener(queues = DemoConfiguration.WORK_OUTBOUND)
     public void certify(String task, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
-        String certified = task + "-certified";
-        template.convertAndSend(DemoConfiguration.CERTIFIED_RESULT, certified);
-        channel.basicAck(tag, false);
-        LOGGER.info("Task certified: {}", certified);
+        try {
+            String certified = task + "-certified";
+            template.convertAndSend(DemoConfiguration.CERTIFIED_RESULT, certified);
+            LOGGER.info("Task certified: {}", certified);
+            channel.basicAck(tag, false);
+        } catch (Exception ex) {
+            LOGGER.warn("Task certification failed: {}", task);
+            channel.basicReject(tag, true);
+        }
     }
 }
