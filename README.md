@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Tested on Linux Debian with OpenJdk.
+Tested on Linux Debian 10.11 and OpenJdk.
 
 * Java 11
 * docker & docker-compose
@@ -194,6 +194,8 @@ Scenario results:
   There is alternative solution - put COLOR in one of headers and filter using Headers Exchange, but it requires
   changes in Producer and Worker.
 * Unit testing of Listeners is implemented using [RabbitListenerTest and RabbitListenerTestHarness](https://docs.spring.io/spring-amqp/docs/current/reference/html/index.html#test-harness)
+  * TestConfig inspired by [concurrent-recursion/spring-rabbit-test-example](https://github.com/concurrent-recursion/spring-rabbit-test-example/blob/1fbadcd45a7ffe4dc3624703224a9c1df0f85586/src/test/java/com/example/junitstuff/TestConfig.java)
+    project.
 
 ### Spring
 
@@ -201,5 +203,6 @@ Scenario results:
 * Configuration and command line parameters are done via [SpringBoot Configuration](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config)
 * Web interface is provided via [SpringBoot Web](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#web) and [Swagger](https://swagger.io/docs/specification/about/)
 * Special configuration for Selective Audit (Scenario 5) is implemented using [SpringBoot Profiles](https://docs.spring.io/spring-boot/docs/1.2.0.M1/reference/html/boot-features-profiles.html)
+* Unit tests are written in [JUnit 5](https://junit.org/junit5/docs/current/user-guide/)
 * Mocking is done with [Mockito](https://github.com/mockito/mockito)
 * REST testing is done with [Spring MVC Test Framework](https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/testing.html#spring-mvc-test-framework)

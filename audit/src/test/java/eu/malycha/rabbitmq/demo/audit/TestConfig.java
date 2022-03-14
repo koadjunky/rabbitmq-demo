@@ -18,6 +18,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;
 
+// After: https://github.com/concurrent-recursion/spring-rabbit-test-example/blob/1fbadcd45a7ffe4dc3624703224a9c1df0f85586/src/test/java/com/example/junitstuff/TestConfig.java
+
 @Configuration
 @RabbitListenerTest(spy = false, capture = true)
 public class TestConfig {
