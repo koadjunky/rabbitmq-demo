@@ -37,14 +37,11 @@ public class ProducerPublisher {
     public void produce() {
         if (enabled) {
             String task = taskFactory.produce();
-            amqpTemplate.convertAndSend("", DemoConfiguration.WORK_INBOUND, task, new MessagePostProcessor() {
-                @Override
-                public Message postProcessMessage(Message message) throws AmqpException {
-                    MessageProperties properties = message.getMessageProperties();
-                    properties.setExpiration(String.valueOf(ttl));
-                    properties.setHeader("x-expiration-time", System.currentTimeMillis() + ttl);
-                    return message;
-                }
+            amqpTemplate.convertAndSend("", DemoConfiguration.WORK_INBOUND, task, message -> {
+                MessageProperties properties = message.getMessageProperties();
+                properties.setExpiration(String.valueOf(ttl));
+                properties.setHeader("x-expiration-time", System.currentTimeMillis() + ttl);
+                return message;
             });
             LOGGER.info("Task produced: {}", task);
         }

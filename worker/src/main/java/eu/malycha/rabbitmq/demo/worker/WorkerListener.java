@@ -70,8 +70,17 @@ public class WorkerListener {
     private void attemptFail() throws Exception {
         // Fail every second attempt
         counter = (counter + 1) % 2;
-        if (failTasks && counter == 1) {
+        if (failTasks && counter == 0) {
             throw new Exception("Processing failure.");
         }
+    }
+
+    public void setProcessingTime(int processingTime) {
+        this.processingTime = processingTime;
+    }
+
+    public void setFailTasks(boolean failTasks) {
+        this.failTasks = failTasks;
+        this.counter = 0;
     }
 }
