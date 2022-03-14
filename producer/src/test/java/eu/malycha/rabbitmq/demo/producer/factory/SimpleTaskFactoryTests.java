@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.IntStream;
 
-class SimpleTaskFactoryTest {
+class SimpleTaskFactoryTests {
 
     @Test
     void tasksAreUnique() {

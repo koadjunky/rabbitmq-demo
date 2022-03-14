@@ -49,4 +49,8 @@ public class FirehoseListener {
         }
         return "unknown";
     }
+
+    public void setTaskPrefix(String taskPrefix) {
+        this.taskPrefix = taskPrefix;
+    }
 }

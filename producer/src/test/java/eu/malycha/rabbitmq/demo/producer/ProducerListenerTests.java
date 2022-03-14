@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest
-class ProducerListenerTest {
+class ProducerListenerTests {
 
     @Autowired
     RabbitListenerTestHarness harness;

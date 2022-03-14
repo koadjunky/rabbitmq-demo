@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProducerController.class)
-class ProducerControllerTest {
+class ProducerControllerTests {
 
     static final String ENDPOINT = "/api/enabled";
     static final String ENABLED = "enabled";

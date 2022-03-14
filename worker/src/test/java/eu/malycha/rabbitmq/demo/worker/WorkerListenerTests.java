@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 
 
 @SpringBootTest
-public class WorkerListenerTest {
+class WorkerListenerTests {
 
     @Autowired
     RabbitListenerTestHarness harness;

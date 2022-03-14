@@ -6,7 +6,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TaskCounterTest {
+class TaskCounterTests {
 
     @Test
     void incAddsOneToCounter() {

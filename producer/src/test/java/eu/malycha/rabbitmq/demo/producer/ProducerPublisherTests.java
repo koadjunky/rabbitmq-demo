@@ -2,7 +2,6 @@ package eu.malycha.rabbitmq.demo.producer;
 
 import eu.malycha.rabbitmq.demo.common.DemoConfiguration;
 import eu.malycha.rabbitmq.demo.producer.factory.TaskFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProducerPublisherTest {
+class ProducerPublisherTests {
 
     @Mock
     TaskFactory factory;

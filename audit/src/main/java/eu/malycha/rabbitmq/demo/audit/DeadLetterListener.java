@@ -31,4 +31,8 @@ public class DeadLetterListener {
         taskCounter.inc(SimpleDeadLetterConfiguration.TASK_DLQ);
         LOGGER.info("Task submitted to exchange: {} ({})", SimpleDeadLetterConfiguration.TASK_DLX, task);
     }
+
+    public void setTaskPrefix(String taskPrefix) {
+        this.taskPrefix = taskPrefix;
+    }
 }
