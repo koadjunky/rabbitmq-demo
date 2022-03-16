@@ -46,7 +46,7 @@ public class WorkerListener {
         }
     }
 
-    private void processFresh(String task, Channel channel, long tag) throws InterruptedException, IOException {
+    private void processFresh(String task, Channel channel, long tag) throws IOException {
         try {
             attemptFail();
             Thread.sleep(processingTime);
@@ -55,10 +55,10 @@ public class WorkerListener {
             LOGGER.info("Task processed: {}", processed);
             channel.basicAck(tag, false);
         } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
             // Requeue task for another processing attempt
-            channel.basicReject(tag, true);
             LOGGER.warn("Task processing interrupted: {}", task);
-            throw ex;
+            channel.basicReject(tag, true);
         } catch (Exception ex) {
             // Requeue task for another processing attempt
             LOGGER.warn("Task processing failed: {}", task);
